@@ -3,6 +3,7 @@ package site.amfdev.base.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import site.amfdev.base.dto.MovieDto;
 import site.amfdev.base.entity.MoodEntity;
 import site.amfdev.base.service.MoodService;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/filmood/moods")
@@ -56,5 +58,17 @@ public class MoodController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
+	
+	@PostMapping("/addTo/{moodId}")
+	public ResponseEntity<?> addMovieToMood(@PathVariable Long moodId, @RequestBody MovieDto movieDto) {
+		try {
+			moodService.addMovieToMood(moodId, movieDto);
+			return ResponseEntity.status(HttpStatus.CREATED).build();
+		} catch (Exception e) {
+			System.out.println(e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
+	}
+	
 
 }
