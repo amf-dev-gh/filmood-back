@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -27,10 +28,6 @@ public class MoodService {
 
 	@Autowired
 	MovieRepository movieRepo;
-
-	public MoodEntity save(MoodEntity mood) {
-		return moodRepo.save(mood);
-	}
 
 	public List<MoodEntity> findByUser(String username) {
 		UserEntity user = userRepo.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
@@ -62,8 +59,17 @@ public class MoodService {
 		if (!mood.getMovies().contains(movie)) {
 			mood.getMovies().add(movie);
 		}
-
 		return moodRepo.save(mood);
+	}
+
+	public MoodEntity updatePrivacityMood(Long moodId, String username) {
+		MoodEntity mood = moodRepo.findById(moodId).orElseThrow(() -> new RuntimeException("Mood not found"));
+		if (username.equalsIgnoreCase(mood.getUser().getUsername())) {
+			mood.setPrivate(!mood.isPrivate());
+			return moodRepo.save(mood);
+		} else {
+			throw new AuthenticationCredentialsNotFoundException("Not authorized");
+		}
 	}
 
 }
