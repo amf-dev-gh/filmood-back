@@ -31,10 +31,9 @@ public class SecurityFilter {
 		http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(
 						requests -> requests
-//								 .requestMatchers("/api/auth/singup", "/api/auth/login").permitAll()
-//								 .requestMatchers("/api/test/admin").hasRole("ADMIN")
-//								 .requestMatchers("/api/test/user").hasAnyRole("USER", "ADMIN")
-								 .anyRequest().permitAll())
+								.requestMatchers("/api/filmood/moods").permitAll()
+								.requestMatchers("/api/filmood/moods/**").authenticated()
+								.anyRequest().permitAll())
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider)
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -44,7 +43,6 @@ public class SecurityFilter {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		// Cambiar los sitios con acceso a la API. (* permite acceso de cualquier origen)
 		configuration.setAllowedOriginPatterns(List.of("http://localhost:4200"));
 		configuration.setAllowedMethods(List.of("GET", "POST", "DELETE"));
 		configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
