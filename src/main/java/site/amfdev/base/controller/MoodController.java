@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+
 @RestController
 @RequestMapping("/api/filmood/moods")
 public class MoodController {
@@ -66,6 +67,25 @@ public class MoodController {
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		} catch (Exception e) {
 			System.out.println(e);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
+	}
+	
+	@GetMapping()
+	public ResponseEntity<?> getAllPublicMods(){
+		List<MoodEntity> moods = moodService.findAllPublicMoods();
+		if(moods.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(moods);
+	}
+	
+	@PostMapping("/updatePrivacity/{moodId}")
+	public ResponseEntity<?> updatePrivacity(@PathVariable Long moodId, @AuthenticationPrincipal UserDetails userDetails) {
+		try {
+			moodService.updatePrivacityMood(moodId, userDetails.getUsername());
+			return ResponseEntity.status(HttpStatus.CREATED).build();
+		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
