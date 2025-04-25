@@ -83,12 +83,20 @@ public class MoodController {
 	@PostMapping("/updatePrivacity/{moodId}")
 	public ResponseEntity<?> updatePrivacity(@PathVariable Long moodId, @AuthenticationPrincipal UserDetails userDetails) {
 		try {
-			moodService.updatePrivacityMood(moodId, userDetails.getUsername());
-			return ResponseEntity.status(HttpStatus.CREATED).build();
+			MoodEntity mood = moodService.updatePrivacityMood(moodId, userDetails.getUsername());
+			return ResponseEntity.status(HttpStatus.CREATED).body(mood);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
-	
 
+	@DeleteMapping("/deleteMovie/{movieId}/{moodId}")
+	public ResponseEntity<?> deleteMovieFromMood(@PathVariable Long movieId, @PathVariable Long moodId, @AuthenticationPrincipal UserDetails userDetails) {
+		try {
+			MoodEntity updatedMood = moodService.deleteMovieFromMood(movieId, moodId, userDetails.getUsername());
+			return ResponseEntity.ok(updatedMood);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
+	}
 }
