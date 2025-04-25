@@ -31,6 +31,7 @@ public class SecurityFilter {
 		http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(
 						requests -> requests
+								.requestMatchers("/api/render/up").permitAll()
 								.requestMatchers("/api/filmood/moods").permitAll()
 								.requestMatchers("/api/filmood/moods/**").authenticated()
 								.anyRequest().permitAll())

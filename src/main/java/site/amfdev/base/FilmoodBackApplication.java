@@ -26,7 +26,7 @@ public class FilmoodBackApplication {
 	CommandLineRunner crearAdmin(AuthenticationService authService, UserRepository userRepo) {
 		return args -> {
 			if (userRepo.count() == 0) {
-				RegisterUserDto user = new RegisterUserDto("User", "user", "12345");
+				RegisterUserDto user = new RegisterUserDto("Andres Fernandez", "andres94af", "123456789Diez");
 				authService.signupUser(user);
 			} else {
 				log.warn("===> There are users in the database");
