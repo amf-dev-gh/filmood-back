@@ -72,4 +72,16 @@ public class MoodService {
 		}
 	}
 
+	public MoodEntity deleteMovieFromMood(Long movieId, Long moodId, String username) {
+		MoodEntity mood = moodRepo.findById(moodId).orElseThrow(() -> new RuntimeException("Mood not found"));
+		MovieEntity movie = movieRepo.findById(movieId).orElseThrow(() -> new RuntimeException("Movie not found"));
+
+		if (mood.getUser().getUsername().equalsIgnoreCase(username)) {
+			mood.getMovies().remove(movie);
+			return moodRepo.save(mood);
+		} else {
+			throw new AuthenticationCredentialsNotFoundException("Not authorized");
+		}
+	}
+
 }
